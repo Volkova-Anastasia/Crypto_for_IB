@@ -1,5 +1,4 @@
 import Galya
-
 from Galya import galya_afin_code, galya_afin_decode,galya_afin_rec_dencode,galya_afin_rec_encode
 
 # поле Гаула для 27 символов и другие константы
@@ -51,6 +50,7 @@ def evklid_second_2(a, b):
 
 def simple_code(text, change, uniq_letters):
     ch_text = text.upper()
+    # uniq_letters = uniq_letters.split(' ')
     change = change.split(' ')
     result = list(ch_text)
     for i in range(len(result)):
@@ -61,12 +61,7 @@ def simple_code(text, change, uniq_letters):
             result[i] = change[pos]   
        
     return ''.join(result)
-def simple_decode(text, key2, key1):
-    uniq_letters = []
-    for i in text:
-        if i not in uniq_letters and i not in p_marks:
-            uniq_letters.append(i) 
-
+def simple_decode(text, key2, key1): #key1 - Alfavit
     result = list(text)
     for i in range(len(result)):
         if result[i] not in p_marks:
@@ -143,8 +138,8 @@ def rec_afin_dencode(alpha1, beta1, alpha2, beta2,text):
     beta_array = []
     obr_a_array = []
 
-    obr_a1 = evklid_first(alpha1, beta1)
-    obr_a2 = evklid_first(alpha2, beta2)
+    obr_a1 = evklid_first(26, alpha1)
+    obr_a2 = evklid_first(26, alpha2)
     if text[0] not in p_marks:
         de_cypher += alphabet[(obr_a1*(alphabet.index(text[0])-beta1))% alph_len]
     else:
@@ -182,19 +177,19 @@ def rec_afin_dencode(alpha1, beta1, alpha2, beta2,text):
     return(de_cypher)
 
 def main():
-    print('Выберите действие:\n1) выполнить кодировку простой замены\n2) выполнить раскодировку простой замены\n3) аффиное шифрование\n4) аффиное дешифрование\n5) аффиный рекурентный шифрование\n6) аффиный рекурентный дешифрование\n7) Тестирование программы и всех ее функций')
+    print('Выберите действие:\n1) выполнить шифрование с помощью простой замены\n2) выполнить дешифрование с помощью простой замены\n3) Выполнить зашифрование с помощью Афинного шифра \n4) Выполнить расшифрование с помощью Афинного шифра \n5) Выполнить зашифрование с помощью Афинного реккурентного шифра \n6) Выполнить расшифрование с помощью Афинного реккурентного шифра \n7) Тестирование программы и всех ее функций')
     choice = input()
     if choice == '1':
         print('Введите шифруемый текст:')
         text = input()
-        uniq_letters = []
-        ch_text = text.upper()
-        for i in ch_text:
-            if i not in uniq_letters and i not in p_marks:
-                uniq_letters.append(i)
+        # uniq_letters = []
+        # ch_text = text.upper()
+        # for i in ch_text:
+        #     if i not in uniq_letters and i not in p_marks:
+        #         uniq_letters.append(i)
 
-        print('Уникальные символы в вашем тексте:')
-        print(' '.join(uniq_letters))
+        print('Уникальные символы в вашем тексте: (Алфавит)')
+        uniq_letters = input().split(' ')
         print('Введите символы замены(через ПРОБЕЛ!):')
         change = input()
         print('Шифрованный текст ' + simple_code(text, change, uniq_letters))
@@ -211,7 +206,7 @@ def main():
         alpha = int(input())
         print('введите beta')
         beta = int(input())
-        print('Введите шифруемый текст:')
+        print('Введите открытый текст:')
         text = input().upper()
         print('Шифрованный текст ' + afin_code(alpha, beta, text))
     if choice == '4':
@@ -221,7 +216,7 @@ def main():
         beta = int(input())
         print('введите зашифрованный текст')
         text = input()
-        print(afin_decode(alpha, beta,text))
+        print('Расшифрованный текст - ' + afin_decode(alpha, beta,text))
     if choice == '5':
         print('введите alpha 1')
         alpha1 = int(input())
@@ -231,9 +226,9 @@ def main():
         beta1 = int(input())
         print('введите beta 2')
         beta2 = int(input())
-        print('введите зашифрованный текст')
+        print('введите открытый текст')
         text = input()
-        print(rec_afin_encode(alpha1, beta1, alpha2, beta2,text))
+        print('Зашифрованный текст - ' + rec_afin_encode(alpha1, beta1, alpha2, beta2,text))
     if choice == '6':
         print('введите alpha 1')
         alpha1 = int(input())
@@ -245,7 +240,7 @@ def main():
         beta2 = int(input())
         print('введите зашифрованный текст')
         text = input()
-        print(rec_afin_dencode(alpha1, beta1, alpha2, beta2,text))
+        print('Открытый текст - ' + rec_afin_dencode(alpha1, beta1, alpha2, beta2,text))
     if choice == '7':
         print('Шифрование фразы - L0ND0N 1S TH3 CAP1TAL 0F GR3AT BR1TA1N')
         print('I) Перестановочный:\n1) перестановочные символы - L N D S T H C A P F G R B\n2) символы на которые переставляем - g H f a s D e R T y u I o \n3) ответ - ' + simple_code("L0ND0N 1S TH3 CAP1TAL 0F GR3AT BR1TA1N","g H f a s D e R T y u I o", "L N D S T H C A P F G R B".split(" ")))
@@ -258,9 +253,4 @@ def main():
   
 main()
 
-# print(simple_code('Advances in medical science are resulting in prolonged lifespans but there is a knock-on effect for public health services, with many hospitals struggling to cope with an aging populace. Many countries enjoy the benefits of free or subsidised national public health services. However, there are some within senior health management who claim that such provision will become unsustainable, and I firmly agree that changes need to be made in order to reflect this changing reality. Despite the notion that healthcare should be ‘free’, such care is predominantly funded by the taxpayer. To give a specific example, a recent report in my country established that almost 40% of the nation’s tax spending is distributed to healthcare and some 80% of that figure is reserved for treating the elderly. This is a disproportionate amount of money which has greatly increased the burden on the state and existing funding is no longer sufficient to meet these needs. This in turn impacts on the standard of care that can be provided as shown by numerous negative media reports about the conditions for both staff and patients. If we want quality healthcare then, clearly this financial burden needs to be alleviated.One way to do so would be to increase the contributions made by citizens through increased taxation. Alternatively, governments could encourage those who can afford it to take up private healthcare arrangements. By switching to a private model, the well-off can afford a higher quality of care, while at the same relieving pressure on public services for those who do not have the means to go private.One thing is for certain, an ageing population has increased the pressure on existing health provision. If we are going to maintain the standards of healthcare that we are used to, more funding needs to be found either through taxation, and alternative forms of provision should be considered. Otherwise, standards will fall and people’s lives will be put at risk.', 'Q W E R T Y U I O P A S D F G H J K L Z X C V B N M',))
-
-#                                                   FOR SIMPLE_DECODE_CRYPTOANALYZ
-# print(simple_decode('QWEQRTYUIROYWITQPUTIYRTYQAYAYUSPDIRFIRGAHPHRFYWPIJYUGQRUKSDDLYAYIUQZRHTZHRYJJYTDJHAGSKPITLYQPDLUYAEITYUXIDLOQRCLHUGIDQPUUDASFFPIRFDHTHGYXIDLQRQFIRFGHGSPQTYOQRCTHSRDAIYUYRVHCDLYKYRYJIDUHJJAYYHAUSKUIWIUYWRQDIHRQPGSKPITLYQPDLUYAEITYULHXYEYADLYAYQAYUHOYXIDLIRUYRIHALYQPDLOQRQFYOYRDXLHTPQIODLQDUSTLGAHEIUIHRXIPPKYTHOYSRUSUDQIRQKPYQRWIJIAOPCQFAYYDLQDTLQRFYURYYWDHKYOQWYIRHAWYADHAYJPYTDDLIUTLQRFIRFAYQPIDCWYUGIDYDLYRHDIHRDLQDLYQPDLTQAYULHSPWKYJAYYUSTLTQAYIUGAYWHOIRQRDPCJSRWYWKCDLYDQBGQCYADHFIEYQUGYTIJITYBQOGPYQAYTYRDAYGHADIROCTHSRDACYUDQKPIULYWDLQDQPOHUDHJDLYRQDIHRUDQBUGYRWIRFIUWIUDAIKSDYWDHLYQPDLTQAYQRWUHOYHJDLQDJIFSAYIUAYUYAEYWJHADAYQDIRFDLYYPWYAPCDLIUIUQWIUGAHGHADIHRQDYQOHSRDHJOHRYCXLITLLQUFAYQDPCIRTAYQUYWDLYKSAWYRHRDLYUDQDYQRWYBIUDIRFJSRWIRFIURHPHRFYAUSJJITIYRDDHOYYDDLYUYRYYWUDLIUIRDSARIOGQTDUHRDLYUDQRWQAWHJTQAYDLQDTQRKYGAHEIWYWQUULHXRKCRSOYAHSURYFQDIEYOYWIQAYGHADUQKHSDDLYTHRWIDIHRUJHAKHDLUDQJJQRWGQDIYRDUIJXYXQRDNSQPIDCLYQPDLTQAYDLYRTPYQAPCDLIUJIRQRTIQPKSAWYRRYYWUDHKYQPPYEIQDYWHRYXQCDHWHUHXHSPWKYDHIRTAYQUYDLYTHRDAIKSDIHRUOQWYKCTIDIMYRUDLAHSFLIRTAYQUYWDQBQDIHRQPDYARQDIEYPCFHEYAROYRDUTHSPWYRTHSAQFYDLHUYXLHTQRQJJHAWIDDHDQZYSGGAIEQDYLYQPDLTQAYQAAQRFYOYRDUKCUXIDTLIRFDHQGAIEQDYOHWYPDLYXYPPHJJTQRQJJHAWQLIFLYANSQPIDCHJTQAYXLIPYQDDLYUQOYAYPIYEIRFGAYUUSAYHRGSKPITUYAEITYUJHADLHUYXLHWHRHDLQEYDLYOYQRUDHFHGAIEQDYHRYDLIRFIUJHATYADQIRQRQFYIRFGHGSPQDIHRLQUIRTAYQUYWDLYGAYUUSAYHRYBIUDIRFLYQPDLGAHEIUIHRIJXYQAYFHIRFDHOQIRDQIRDLYUDQRWQAWUHJLYQPDLTQAYDLQDXYQAYSUYWDHOHAYJSRWIRFRYYWUDHKYJHSRWYIDLYADLAHSFLDQBQDIHRQRWQPDYARQDIEYJHAOUHJGAHEIUIHRULHSPWKYTHRUIWYAYWHDLYAXIUYUDQRWQAWUXIPPJQPPQRWGYHGPYUPIEYUXIPPKYGSDQDAIUZ','H Q A N C Z P J G K X B M U V Y D L I R S W F T O E', 'Q W E R T Y U I O P A S D F G H J K L Z X C V B N M')) # Расшифровываем шифртекст  с помощью ключа из криптоанализа (ключ после замены частот)
-print(simple_decode('EALETSQURTJQARSEPUSRQTSQEIQIQUDPWRTGRTHIYPYTGQAPRFQUHETUKDWWOQIQRUEVTYSVYTQFFQSWFYIHDKPRSOQEPWOUQILRSQUZRWOJETXOYUHRWEPUUWIDGGPRTGWYSYHQZRWOETEGRTGHYHDPESQJETXSYDTWIRQUQTMYXWOQKQTQFRWUYFFIQQYIUDKURARUQATEWRYTEPHDKPRSOQEPWOUQILRSQUOYZQLQIWOQIQEIQUYJQZRWORTUQTRYIOQEPWOJETEGQJQTWZOYSPERJWOEWUDSOHIYLRURYTZRPPKQSYJQDTUDUWERTEKPQETARFRIJPXEGIQQWOEWSOETGQUTQQAWYKQJEAQRTYIAQIWYIQFPQSWWORUSOETGRTGIQEPRWXAQUHRWQWOQTYWRYTWOEWOQEPWOSEIQUOYDPAKQFIQQUDSOSEIQRUHIQAYJRTETWPXFDTAQAKXWOQWECHEXQIWYGRLQEUHQSRFRSQCEJHPQEIQSQTWIQHYIWRTJXSYDTWIXQUWEKPRUOQAWOEWEPJYUWYFWOQTEWRYTUWECUHQTARTGRUARUWIRKDWQAWYOQEPWOSEIQETAUYJQYFWOEWFRGDIQRUIQUQILQAFYIWIQEWRTGWOQQPAQIPXWORURUEARUHIYHYIWRYTEWQEJYDTWYFJYTQXZORSOOEUGIQEWPXRTSIQEUQAWOQKDIAQTYTWOQUWEWQETAQCRUWRTGFDTARTGRUTYPYTGQIUDFFRSRQTWWYJQQWWOQUQTQQAUWORURTWDITRJHESWUYTWOQUWETAEIAYFSEIQWOEWSETKQHIYLRAQAEUUOYZTKXTDJQIYDUTQGEWRLQJQAREIQHYIWUEKYDWWOQSYTARWRYTUFYIKYWOUWEFFETAHEWRQTWURFZQZETWBDEPRWXOQEPWOSEIQWOQTSPQEIPXWORUFRTETSREPKDIAQTTQQAUWYKQEPPQLREWQAYTQZEXWYAYUYZYDPAKQWYRTSIQEUQWOQSYTWIRKDWRYTUJEAQKXSRWRNQTUWOIYDGORTSIQEUQAWECEWRYTEPWQITEWRLQPXGYLQITJQTWUSYDPAQTSYDIEGQWOYUQZOYSETEFFYIARWWYWEVQDHHIRLEWQOQEPWOSEIQEIIETGQJQTWUKXUZRWSORTGWYEHIRLEWQJYAQPWOQZQPPYFFSETEFFYIAEORGOQIBDEPRWXYFSEIQZORPQEWWOQUEJQIQPRQLRTGHIQUUDIQYTHDKPRSUQILRSQUFYIWOYUQZOYAYTYWOELQWOQJQETUWYGYHIRLEWQYTQWORTGRUFYISQIWERTETEGQRTGHYHDPEWRYTOEURTSIQEUQAWOQHIQUUDIQYTQCRUWRTGOQEPWOHIYLRURYTRFZQEIQGYRTGWYJERTWERTWOQUWETAEIAUYFOQEPWOSEIQWOEWZQEIQDUQAWYJYIQFDTARTGTQQAUWYKQFYDTAQRWOQIWOIYDGOWECEWRYTETAEPWQITEWRLQFYIJUYFHIYLRURYTUOYDPAKQSYTURAQIQAYWOQIZRUQUWETAEIAUZRPPFEPPETAHQYHPQUPRLQUZRPPKQHDWEWIRUV', 'V Y Q I R H U A L P W T S J F G O K E X C B Z N M D', 'E A L T S W U R J P I D M G H Y F K O V Z X Q C B N')) # Первый расшифрованный текст с помощью ключа частот символов
-
+# print(crypto_first_analyz(text))
